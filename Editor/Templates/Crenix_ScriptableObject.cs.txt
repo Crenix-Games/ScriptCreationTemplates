@@ -1,0 +1,17 @@
+﻿/*===============================================================
+Product:    #PROJECTNAME#
+Developer:  #DEVELOPERNAME#
+Company:    #COMPANY#
+Date:       #CREATIONDATE#
+================================================================*/
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+#FOLDERNAMESPACE#
+#SPACE#[CreateAssetMenu(fileName = "#SCRIPTNAME#", menuName = "DataFile/#SCRIPTNAME#", order = 1)]
+#SPACE#public class #SCRIPTNAME# : ScriptableObject {
+
+#SPACE#}
+#ENDNAMESPACE#

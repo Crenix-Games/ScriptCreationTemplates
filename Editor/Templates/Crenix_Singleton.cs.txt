@@ -1,0 +1,24 @@
+﻿/*===============================================================
+Product:    #PROJECTNAME#
+Developer:  #DEVELOPERNAME#
+Company:    #COMPANY#
+Date:       #CREATIONDATE#
+================================================================*/
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+#FOLDERNAMESPACE#
+#SPACE#public class #SCRIPTNAME# : MonoBehaviour {
+#SPACE#    private static #SCRIPTNAME# _instance;
+#SPACE#    public static #SCRIPTNAME# Instance { get { return _instance;}}
+#SPACE#    private void Awake(){
+#SPACE#        if(_instance != null && _instance != this){
+#SPACE#            Destroy(this.gameObject);
+#SPACE#        }else{
+#SPACE#            _instance = this;
+#SPACE#        }
+#SPACE#    }
+#SPACE#}
+#ENDNAMESPACE#
