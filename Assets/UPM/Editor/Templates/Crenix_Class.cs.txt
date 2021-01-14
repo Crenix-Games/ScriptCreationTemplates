@@ -1,0 +1,13 @@
+﻿/*===============================================================
+Product:    #PROJECTNAME#
+Developer:  #DEVELOPERNAME#
+Company:    #COMPANY#
+Date:       #CREATIONDATE#
+================================================================*/
+
+#FOLDERNAMESPACE#
+#SPACE#public class #SCRIPTNAME# {
+
+#SPACE#}
+#ENDNAMESPACE#
+
