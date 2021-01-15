@@ -5,9 +5,13 @@ Company:    #COMPANY#
 Date:       #CREATIONDATE#
 ================================================================*/
 
-#FOLDERNAMESPACE#
-#SPACE#public class #SCRIPTNAME# {
+using UnityEngine;
 
-#SPACE#}
+#FOLDERNAMESPACE#
+    [CreateAssetMenu(menuName = "ScriptableObject/#SCRIPTNAME#")]
+    public class #SCRIPTNAME# : ScriptableObject
+    {
+
+    }
 #ENDNAMESPACE#
 
