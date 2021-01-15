@@ -1,95 +1,72 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using System;
 using Object = UnityEngine.Object;
 using System.IO;
 using System.Text;
 
-public class ScriptTemplateCreationUtility {
-    private static Texture2D scriptIcon = (EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D);
+internal class ScriptTemplateCreationUtility
+{
+    private static readonly Texture2D ScriptIcon = EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D;
 
-    [MenuItem("Assets/Create/Crenix/Class", false, 80)]
-    private static void CreateClassBehaviour() {
-        string template = "Crenix_Class.cs";
-        CreateTemplate(template);
-    }
-    
-    [MenuItem("Assets/Create/Crenix/Mono Behaviour", false, 80)]
-    private static void CreateMonoBehaviour() {
-        string template = "Crenix_MonoBehaviour.cs";
-        CreateTemplate(template);
-    }
+    [MenuItem("Assets/Create/Script Template/Class", false, 80)]
+    private static void CreateClassBehaviour() => CreateTemplate("MyClass.cs");
 
-    [MenuItem("Assets/Create/Crenix/Singleton", false, 80)]
-    private static void CreateSingleton() {
-        string template = "Crenix_Singleton.cs";
-        CreateTemplate(template);
-    }
+    [MenuItem("Assets/Create/Script Template/Mono Behaviour", false, 80)]
+    private static void CreateMonoBehaviour() => CreateTemplate("MyMonoBehaviour.cs");
 
-    [MenuItem("Assets/Create/Crenix/Scriptable Object", false, 80)]
-    private static void CreateScriptableObject() {
-        string template = "Crenix_ScriptableObject.cs";
-        CreateTemplate(template);
-    }
-    private static void CreateTemplate(string template) {
-        var path = UpmHelper.GetTemplatesPath("com.crenixgames.scriptcreationtemplate") + "/" + template+".txt";
-        CreateFromTemplate(
-            template,
-            path
-        );
-    }
-    
-    
+    [MenuItem("Assets/Create/Script Template/Scriptable Object", false, 80)]
+    private static void CreateScriptableObject() => CreateTemplate("MyScriptableObject.cs");
 
-    public static void CreateFromTemplate(string initialName, string templatePath) {
+    private static void CreateTemplate(string template)
+    {
+        var path = $"{UpmHelper.GetTemplatesPath("com.crenixgames.scriptcreationtemplate")}/{template}.txt";
+
         ProjectWindowUtil.StartNameEditingIfProjectWindowExists(
             0,
             ScriptableObject.CreateInstance<DoCreateCodeFile>(),
-            initialName,
-            scriptIcon,
-            templatePath
+            template,
+            ScriptIcon,
+            path
         );
     }
-    /// Inherits from EndNameAction, must override EndNameAction.Action
-    public class DoCreateCodeFile : UnityEditor.ProjectWindowCallback.EndNameEditAction {
-        public override void Action(int instanceId, string pathName, string resourceFile) {
-            Object o = CreateScript(pathName, resourceFile);
+
+    public class DoCreateCodeFile : UnityEditor.ProjectWindowCallback.EndNameEditAction
+    {
+        public override void Action(int instanceId, string pathName, string resourceFile)
+        {
+            var o = CreateScript(pathName, resourceFile);
             ProjectWindowUtil.ShowCreatedAsset(o);
         }
     }
 
-    /// <summary>Creates Script from Template's path.</summary>
-    internal static UnityEngine.Object CreateScript(string pathName, string templatePath) {
-        string className = Path.GetFileNameWithoutExtension(pathName).Replace(" ", string.Empty);
-        string templateText = string.Empty;
+    private static Object CreateScript(string pathName, string templatePath)
+    {
+        if (File.Exists(templatePath))
+        {
+            var templateText = File.ReadAllText(templatePath);
 
-        UTF8Encoding encoding = new UTF8Encoding(true, false);
-
-        if (File.Exists(templatePath)) {
-            /// Read procedures.
-            StreamReader reader = new StreamReader(templatePath);
-            templateText = reader.ReadToEnd();
-            reader.Close();
-
-            templateText = templateText.Replace("#SCRIPTNAME#", className);
             templateText = templateText.Replace("#NOTRIM#", string.Empty);
-            /// You can replace as many tags you make on your templates, just repeat Replace function
-            /// e.g.:
-            /// templateText = templateText.Replace("#NEWTAG#", "MyText");
 
-            /// Write procedures.
+            templateText = templateText.Replace("#SCRIPTNAME#", InformationProvider.ClassName(pathName));
+            templateText = templateText.Replace("#COMPANY#", Application.companyName);
 
-            StreamWriter writer = new StreamWriter(Path.GetFullPath(pathName), false, encoding);
+            templateText = templateText.Replace("#DEVELOPERNAME#", InformationProvider.UserName());
+            
+            templateText = templateText.Replace("#FOLDERNAMESPACE#", InformationProvider.Namespace(pathName));
+            templateText = templateText.Replace("#ENDNAMESPACE#", "}");
+
+            templateText = templateText.Replace("#CREATIONDATE#", System.DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
+            templateText = templateText.Replace("#PROJECTNAME#", PlayerSettings.productName);
+            
+            var writer = new StreamWriter(Path.GetFullPath(pathName), false, new UTF8Encoding(true, false));
             writer.Write(templateText);
             writer.Close();
 
             AssetDatabase.ImportAsset(pathName);
             return AssetDatabase.LoadAssetAtPath(pathName, typeof(Object));
-        } else {
-            Debug.LogError(string.Format("The template file was not found: {0}", templatePath));
-            return null;
         }
+
+        Debug.LogError($"The template file was not found: {templatePath}");
+        return null;
     }
 }

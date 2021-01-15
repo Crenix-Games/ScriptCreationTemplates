@@ -5,21 +5,13 @@ Company:    #COMPANY#
 Date:       #CREATIONDATE#
 ================================================================*/
 
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 #FOLDERNAMESPACE#
-#SPACE#public class #SCRIPTNAME# : MonoBehaviour {
-#SPACE#    // Use this for initialization
-#SPACE#    void Start () {
-#SPACE#        #NOTRIM#
-#SPACE#    }
-
-#SPACE#    // Update is called once per frame
-#SPACE#    void Update () {
-#SPACE#        #NOTRIM#
-#SPACE#    }
-#SPACE#}
+    public class #SCRIPTNAME# : MonoBehaviour {
+        
+    }
 #ENDNAMESPACE#
 
