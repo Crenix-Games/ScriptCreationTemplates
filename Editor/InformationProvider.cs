@@ -15,7 +15,7 @@ internal static class InformationProvider
         var nameSpace = "namespace ";
         var folders = path.Replace(".cs", string.Empty).Split('/');
 
-        var scriptsFolder = folders.FirstOrDefault(_ => _.ToLower() == "scripts" || _.ToLower() == "script");
+        var scriptsFolder = folders.FirstOrDefault(_ => _.ToLower().Contains("script"));
         var index = Array.IndexOf(folders, scriptsFolder) + 1;
 
         if (index < 0 || index >= folders.Length - 1) return "namespace Scripts {";
